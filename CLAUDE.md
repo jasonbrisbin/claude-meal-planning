@@ -1,66 +1,18 @@
+## Welcome Message
+At the start of every new conversation, display a status summary:
+1. Check the most recent file in `meal_plans/` and show its date
+2. Show today's date and whether a meal plan exists for the current week
+3. List available commands: `/project:meal-plan` — generate a new weekly meal plan
+Keep it brief (5-6 lines max).
+
 ## Description
 This repository is to help manage my dietary needs including meal planning and shopping.
 
-## Daily Goals
-Protein
-- 100g from lean protein sources
-  - Sources included
-    - chicken, beef, pork, turkey
-    - beans
-    - peanuts/almonds/pistachios
-    - Greek yogurt
-    - Cottage cheese
-    - cheese stick/slices
-    - egg
-  - Protein should be spread out throughout the daily meals and somewhat consistent through the day
-Produce
-- As much as you want
-- Non-Starchy Veg 
-Carbs
-- 100g per day
-- Sources
-  - Grains
-    - Cereal
-    - Rice
-    - Bread 
-  - prefer ingredients that have fiber
-  - Starchy Veg
-    - Potato
-    - Corn
-    - Peas
-    - Sweet Potato
-    - Squash
-    - each serving sizes should be about 15g of carbs
-  - Fruit
-    - Serving size of 15g Carbs
-    - dried fruits are concentrated so be aware
-Heart Healthy Fats
-Water=100oz (64 is the minimum)
-
-## Exclusions
-Foods in this section should not be included
-- Fish
-- Tofu
-- Chicken Thighs
-- Brown Rice
-  - White Rice and Wild Rices are fine
-
-## Notes
-** Do not subtract fiber from carbs for totals
-** Important for managing pH in the body
-** Do not do Keto while on GLP-1 the meds reduce blood sugar, minimum >50g of carbs
+## Dietary Guidelines
+See [dietary guidelines](docs/dietary-guidelines.md) for nutritional targets, allowed/excluded foods, and important dietary notes. Always consult this file when creating meal plans.
 
 ## Shopping
-We want to minimize the amount of groceries that we need to acquire.  As such we want to center the meal choices around foods which can be used more than once throughout the week.
-
-Choose products from these stores by preference order.
-1. Aldi
-2. Costco
-   1. only if better value or unavailable from Aldi
-3. Sams Club
-4. County Market
-
-Optimize for cost per serving
+See [shopping guidelines](docs/shopping-guidelines.md) for store preferences and shopping strategy.
 
 ## Scheduling
 Add the meal plan to the corresponding date on my Google Calendar for "Family".  All times are in Central time zone.
