@@ -2,8 +2,11 @@
 At the start of every new conversation, display a status summary:
 1. Check the most recent file in `meal_plans/` and show its date
 2. Show today's date and whether a meal plan exists for the current week
-3. List available commands: `/project:meal-plan` — generate a new weekly meal plan
-Keep it brief (5-6 lines max).
+3. Check MCP server readiness (run these in parallel):
+   - **Google Calendar**: call `list_calendars` — report ✅ if it returns results, ❌ if it errors
+   - **Microsoft To Do (n8n)**: call `Get_many_lists_in_Microsoft_To_Do` — report ✅ if it returns results, ❌ if it errors
+4. List available commands: `/project:meal-plan` — generate a new weekly meal plan
+Keep it brief (7-8 lines max).
 
 ## Description
 This repository is to help manage my dietary needs including meal planning and shopping.
@@ -31,17 +34,13 @@ Add the meal plan to the corresponding date on my Google Calendar for "Family". 
 - `docs/` - Project documentation and setup guides
 - `articles/` - Articles describing the solution I am creating which can be posted to social media like LinkedIn.
 
-## Microsoft To-Do (via Zapier MCP)
+## Microsoft To-Do (via n8n MCP)
 - Used for grocery/shopping lists
-- **Find a Task** requires a `title` parameter — it cannot list all tasks in a list without a search term
-- **Create Task** works without restrictions — can specify list, title, due date, importance, notes
-- **Complete Task** available for marking tasks done
-- **API Request (Beta)** — raw Microsoft Graph API calls; use for updating tasks (e.g., PATCH to change importance, title, etc.)
-  - Endpoint pattern: `https://graph.microsoft.com/v1.0/me/todo/lists/{list-id}/tasks/{task-id}`
-  - Content-Type header is forced in Zapier config (no need to pass it)
-  - Body should be JSON (e.g., `{"importance": "high"}`)
-  - Batch endpoint: `POST https://graph.microsoft.com/v1.0/$batch` — up to 4 requests per batch (20 causes 429 throttling)
-  - To list all tasks use API Request with GET: `https://graph.microsoft.com/v1.0/me/todo/lists/{list-id}/tasks?$top=200` (paginate with `$skip=200`)
+- **Get many tasks** (`Get_many_tasks_in_Microsoft_To_Do`) — list tasks on a given list
+- **Create a task** (`Create_a_task_in_Microsoft_To_Do`) — create tasks with title, due date, importance, notes
+- **Update a task** (`Update_a_task_in_Microsoft_To_Do`) — update task properties (e.g., importance)
+- **Delete a task** (`Delete_a_task_in_Microsoft_To_Do`) — remove tasks
+- **Get many lists** (`Get_many_lists_in_Microsoft_To_Do`) — list all To-Do lists
 
 ### List Access Rules
 - **Groceries** — READ-ONLY. Never create, update, or delete tasks here.
@@ -49,6 +48,11 @@ Add the meal plan to the corresponding date on my Google Calendar for "Family". 
 
 ### Lists
 - Groceries, Claude (and others not used by this project)
+
+## Workflow Diagrams
+When the `/meal-plan` command (`.claude/commands/meal-plan.md`) is modified, you **must** update both workflow diagrams to reflect the changes:
+- `docs/meal-plan-workflow.md` (Mermaid version)
+- `docs/meal-plan-workflow.html` (HTML/CSS Material Design version)
 
 ## Environment
 You are working with a Windows host.  Commands and scripts should use powershell when possible.

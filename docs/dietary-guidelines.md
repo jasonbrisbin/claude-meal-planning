@@ -50,6 +50,9 @@ Each day should include:
 - Include macro estimates per meal item (e.g., "chicken breast (30g protein)")
 - Include daily totals for protein and carbs
 
+## Leftover Strategy
+When the same protein is used for both a dinner and a lunch, schedule the lunch on the **day after** the dinner so leftovers can be used. Cook extra at dinner to cover the next day's lunch.
+
 ## Notes
 ** Do not subtract fiber from carbs for totals
 ** Important for managing pH in the body
