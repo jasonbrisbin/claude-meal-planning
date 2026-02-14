@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Meal Plan Output</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+  :root {
+    --md-blue-50: #e3f2fd;
+    --md-blue-100: #bbdefb;
+    --md-blue-200: #90caf9;
+    --md-blue-500: #2196f3;
+    --md-blue-700: #1565c0;
+    --md-blue-800: #0d47a1;
+    --md-green-50: #e8f5e9;
+    --md-green-700: #388e3c;
+    --md-green-800: #2e7d32;
+    --md-amber-50: #fff8e1;
+    --md-amber-700: #ffa000;
+    --md-amber-800: #ff8f00;
+    --md-orange-50: #fff3e0;
+    --md-orange-700: #f57c00;
+    --md-orange-800: #e65100;
+    --md-surface: #fafafa;
+    --md-outline: #79747e;
+    --md-shadow-1: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.14);
+    --md-shadow-2: 0 3px 6px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.10);
+    --md-shadow-3: 0 6px 12px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.08);
+    --md-radius: 16px;
+    --md-radius-sm: 12px;
+    --md-radius-xs: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, var(--md-blue-50) 0%, #f5f5f5 100%);
+    min-height: 100vh;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-size: 2rem;
+    color: var(--md-blue-800);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--md-outline);
+    margin-bottom: 40px;
+  }
+
+  .plan {
+    max-width: 720px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Targets bar */
+  .targets {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+  .target-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    box-shadow: var(--md-shadow-1);
+  }
+  .target-chip .material-icons-outlined { font-size: 20px; }
+  .target-chip.protein { background: var(--md-green-50); color: var(--md-green-800); }
+  .target-chip.protein .material-icons-outlined { color: var(--md-green-700); }
+  .target-chip.carbs { background: var(--md-amber-50); color: var(--md-amber-800); }
+  .target-chip.carbs .material-icons-outlined { color: var(--md-amber-700); }
+  .target-chip.water { background: var(--md-blue-50); color: var(--md-blue-800); }
+  .target-chip.water .material-icons-outlined { color: var(--md-blue-500); }
+
+  /* Day card */
+  .day-card {
+    background: #fff;
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow-2);
+    overflow: hidden;
+  }
+  .day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--md-blue-700);
+    color: #fff;
+  }
+  .day-name {
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+  .day-totals {
+    display: flex;
+    gap: 16px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+  .day-total-item { font-weight: 400; }
+  .day-total-item strong { font-weight: 700; }
+
+  .day-body { padding: 16px 24px; }
+
+  .meals {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .meal {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--md-radius-xs);
+    background: var(--md-blue-50);
+    border: 1px solid var(--md-blue-100);
+  }
+
+  .meal-time {
+    min-width: 56px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--md-blue-700);
+    padding-top: 2px;
+  }
+
+  .meal-content {
+    flex: 1;
+  }
+  .meal-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--md-blue-800);
+    margin-bottom: 4px;
+  }
+  .meal-macros {
+    font-size: 0.78rem;
+    color: var(--md-outline);
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .meal.snack {
+    background: var(--md-green-50);
+    border-color: #c8e6c9;
+  }
+  .meal.snack .meal-time { color: var(--md-green-800); }
+  .meal.snack .meal-name { color: var(--md-green-800); }
+
+  /* Shopping list preview */
+  .shopping-card {
+    background: #fff;
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow-2);
+    overflow: hidden;
+  }
+  .shopping-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--md-orange-700);
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+  .shopping-header .material-icons-outlined { font-size: 22px; }
+  .shopping-body { padding: 16px 24px; }
+
+  .store-section {
+    margin-bottom: 14px;
+  }
+  .store-section:last-child { margin-bottom: 0; }
+  .store-name {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--md-orange-800);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .store-name .material-icons-outlined { font-size: 18px; }
+
+  .store-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .item-chip {
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    background: var(--md-orange-50);
+    color: var(--md-orange-800);
+    border: 1px solid #ffe0b2;
+  }
+
+  /* Fade overlay for "and more" effect */
+  .more-indicator {
+    text-align: center;
+    padding: 12px;
+    font-size: 0.82rem;
+    color: var(--md-outline);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>Sample Meal Plan Output</h1>
+<p class="subtitle">Week of February 23, 2026 &mdash; generated by /meal-plan</p>
+
+<div class="plan">
+
+  <!-- Daily targets -->
+  <div class="targets">
+    <div class="target-chip protein">
+      <span class="material-icons-outlined">fitness_center</span>
+      Protein: 100g
+    </div>
+    <div class="target-chip carbs">
+      <span class="material-icons-outlined">grain</span>
+      Carbs: 100g
+    </div>
+    <div class="target-chip water">
+      <span class="material-icons-outlined">water_drop</span>
+      Water: 100oz
+    </div>
+  </div>
+
+  <!-- Monday -->
+  <div class="day-card">
+    <div class="day-header">
+      <span class="day-name">Monday, Feb 23</span>
+      <div class="day-totals">
+        <span class="day-total-item">Protein: <strong>102g</strong></span>
+        <span class="day-total-item">Carbs: <strong>98g</strong></span>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="meals">
+        <div class="meal">
+          <div class="meal-time">7:00 AM<br>Breakfast</div>
+          <div class="meal-content">
+            <div class="meal-name">Greek Yogurt Bowl with Berries &amp; Almonds</div>
+            <div class="meal-macros">P: 20g &bull; C: 22g &bull; Fat: 12g</div>
+          </div>
+        </div>
+        <div class="meal snack">
+          <div class="meal-time">10:00 AM<br>Snack</div>
+          <div class="meal-content">
+            <div class="meal-name">Cheese Stick &amp; Pistachios</div>
+            <div class="meal-macros">P: 12g &bull; C: 8g &bull; Fat: 14g</div>
+          </div>
+        </div>
+        <div class="meal">
+          <div class="meal-time">12:00 PM<br>Lunch</div>
+          <div class="meal-content">
+            <div class="meal-name">Turkey &amp; Veggie Wrap with Side Salad</div>
+            <div class="meal-macros">P: 30g &bull; C: 32g &bull; Fat: 10g</div>
+          </div>
+        </div>
+        <div class="meal snack">
+          <div class="meal-time">3:00 PM<br>Snack</div>
+          <div class="meal-content">
+            <div class="meal-name">Cottage Cheese with Cucumber</div>
+            <div class="meal-macros">P: 14g &bull; C: 6g &bull; Fat: 5g</div>
+          </div>
+        </div>
+        <div class="meal">
+          <div class="meal-time">5:00 PM<br>Dinner</div>
+          <div class="meal-content">
+            <div class="meal-name">Grilled Chicken Breast with Roasted Broccoli &amp; White Rice</div>
+            <div class="meal-macros">P: 38g &bull; C: 30g &bull; Fat: 8g</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tuesday (condensed) -->
+  <div class="day-card">
+    <div class="day-header">
+      <span class="day-name">Tuesday, Feb 24</span>
+      <div class="day-totals">
+        <span class="day-total-item">Protein: <strong>104g</strong></span>
+        <span class="day-total-item">Carbs: <strong>95g</strong></span>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="meals">
+        <div class="meal">
+          <div class="meal-time">7:00 AM<br>Breakfast</div>
+          <div class="meal-content">
+            <div class="meal-name">Scrambled Eggs with Toast &amp; Avocado</div>
+            <div class="meal-macros">P: 22g &bull; C: 24g &bull; Fat: 18g</div>
+          </div>
+        </div>
+        <div class="meal">
+          <div class="meal-time">12:00 PM<br>Lunch</div>
+          <div class="meal-content">
+            <div class="meal-name">Chicken &amp; Veggie Bowl (Monday leftovers)</div>
+            <div class="meal-macros">P: 34g &bull; C: 28g &bull; Fat: 8g</div>
+          </div>
+        </div>
+      </div>
+      <div class="more-indicator">+ snacks and dinner &hellip;</div>
+    </div>
+  </div>
+
+  <div class="more-indicator">Wednesday through Sunday follow the same format &hellip;</div>
+
+  <!-- Shopping list preview -->
+  <div class="shopping-card">
+    <div class="shopping-header">
+      <span class="material-icons-outlined">shopping_cart</span>
+      Shopping List
+    </div>
+    <div class="shopping-body">
+      <div class="store-section">
+        <div class="store-name">
+          <span class="material-icons-outlined">storefront</span>
+          Aldi
+        </div>
+        <div class="store-items">
+          <span class="item-chip">Chicken breast (3 lb)</span>
+          <span class="item-chip">Greek yogurt</span>
+          <span class="item-chip">Eggs (dozen)</span>
+          <span class="item-chip">Broccoli</span>
+          <span class="item-chip">Cucumber</span>
+          <span class="item-chip">White rice</span>
+          <span class="item-chip">Bread</span>
+          <span class="item-chip">Mixed berries</span>
+        </div>
+      </div>
+      <div class="store-section">
+        <div class="store-name">
+          <span class="material-icons-outlined">storefront</span>
+          Costco
+        </div>
+        <div class="store-items">
+          <span class="item-chip">Ground turkey (4 lb)</span>
+          <span class="item-chip">Cottage cheese (2-pack)</span>
+          <span class="item-chip">Pistachios</span>
+          <span class="item-chip">Almonds</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

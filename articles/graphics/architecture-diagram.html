@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+  :root {
+    --md-blue-50: #e3f2fd;
+    --md-blue-100: #bbdefb;
+    --md-blue-200: #90caf9;
+    --md-blue-500: #2196f3;
+    --md-blue-600: #1e88e5;
+    --md-blue-700: #1565c0;
+    --md-blue-800: #0d47a1;
+    --md-green-50: #e8f5e9;
+    --md-green-600: #43a047;
+    --md-green-800: #2e7d32;
+    --md-purple-50: #f3e5f5;
+    --md-purple-600: #8e24aa;
+    --md-purple-800: #6a1b9a;
+    --md-red-50: #fce4ec;
+    --md-red-600: #e53935;
+    --md-red-800: #c62828;
+    --md-indigo-50: #e8eaf6;
+    --md-indigo-600: #3949ab;
+    --md-indigo-800: #283593;
+    --md-surface: #fafafa;
+    --md-outline: #79747e;
+    --md-shadow-2: 0 3px 6px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.10);
+    --md-shadow-3: 0 6px 12px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.08);
+    --md-radius: 16px;
+    --md-radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, var(--md-blue-50) 0%, #f5f5f5 100%);
+    min-height: 100vh;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-size: 2rem;
+    color: var(--md-blue-800);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--md-outline);
+    margin-bottom: 48px;
+  }
+
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  /* Center hub */
+  .hub {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 36px;
+    background: var(--md-blue-700);
+    color: #fff;
+    border-radius: 50px;
+    box-shadow: var(--md-shadow-3);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+  }
+  .hub .material-icons-outlined { font-size: 28px; }
+
+  /* Connector */
+  .connector-row {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    gap: 0;
+    position: relative;
+    height: 48px;
+  }
+  .connector-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 100%;
+    background: var(--md-blue-200);
+  }
+
+  /* Branches */
+  .branches {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    height: 48px;
+  }
+  .branches::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - 280px);
+    width: 560px;
+    height: 3px;
+    background: var(--md-blue-200);
+  }
+  .branches .vert {
+    position: absolute;
+    width: 3px;
+    height: 48px;
+    background: var(--md-blue-200);
+  }
+  .branches .vert::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--md-blue-200);
+  }
+  .branches .vert.left { left: calc(50% - 280px); }
+  .branches .vert.center { left: 50%; transform: translateX(-50%); }
+  .branches .vert.right { left: calc(50% + 277px); }
+
+  /* Service cards row */
+  .services {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .service-card {
+    flex: 1;
+    max-width: 260px;
+    background: #fff;
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow-2);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .service-card:hover { box-shadow: var(--md-shadow-3); transform: translateY(-2px); }
+
+  .service-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .service-header .material-icons-outlined { font-size: 22px; }
+
+  .service-header.calendar { background: var(--md-red-600); }
+  .service-header.todo { background: var(--md-indigo-600); }
+  .service-header.git { background: var(--md-purple-600); }
+
+  .service-body {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .service-detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: #444;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+  .service-detail .material-icons-outlined { font-size: 18px; flex-shrink: 0; }
+
+  .service-detail.cal-detail { background: var(--md-red-50); color: var(--md-red-800); }
+  .service-detail.cal-detail .material-icons-outlined { color: var(--md-red-600); }
+
+  .service-detail.todo-detail { background: var(--md-indigo-50); color: var(--md-indigo-800); }
+  .service-detail.todo-detail .material-icons-outlined { color: var(--md-indigo-600); }
+
+  .service-detail.git-detail { background: var(--md-purple-50); color: var(--md-purple-800); }
+  .service-detail.git-detail .material-icons-outlined { color: var(--md-purple-600); }
+
+  /* Protocol badges */
+  .protocol-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .protocol-badge.stdio { background: var(--md-green-50); color: var(--md-green-800); }
+  .protocol-badge.http { background: var(--md-blue-50); color: var(--md-blue-800); }
+  .protocol-badge.cli { background: var(--md-purple-50); color: var(--md-purple-800); }
+
+  /* Data stores row */
+  .stores-connector {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    height: 40px;
+  }
+  .stores-connector .vert {
+    position: absolute;
+    width: 3px;
+    height: 40px;
+    background: var(--md-blue-200);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .stores-connector .vert::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--md-blue-200);
+  }
+
+  .store-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    background: #fff;
+    border-radius: var(--md-radius-sm);
+    box-shadow: var(--md-shadow-2);
+    border-left: 4px solid var(--md-green-600);
+  }
+  .store-card .material-icons-outlined { font-size: 24px; color: var(--md-green-600); }
+  .store-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--md-green-800);
+  }
+  .store-sub {
+    font-size: 0.8rem;
+    color: var(--md-outline);
+  }
+</style>
+</head>
+<body>
+
+<h1>System Architecture</h1>
+<p class="subtitle">How Claude Code connects to external services via MCP</p>
+
+<div class="diagram">
+
+  <!-- Central hub -->
+  <div class="hub">
+    <span class="material-icons-outlined">smart_toy</span>
+    Claude Code
+  </div>
+
+  <!-- Branching connectors -->
+  <div class="branches">
+    <div class="vert left"></div>
+    <div class="vert center"></div>
+    <div class="vert right"></div>
+  </div>
+
+  <!-- Service cards -->
+  <div class="services">
+
+    <!-- Google Calendar -->
+    <div class="service-card">
+      <div class="service-header calendar">
+        <span class="material-icons-outlined">calendar_month</span>
+        Google Calendar
+      </div>
+      <div class="service-body">
+        <div class="service-detail cal-detail">
+          <span class="material-icons-outlined">dns</span>
+          Python MCP Server
+          <span class="protocol-badge stdio">stdio</span>
+        </div>
+        <div class="service-detail cal-detail">
+          <span class="material-icons-outlined">vpn_key</span>
+          OAuth 2.0
+        </div>
+        <div class="service-detail cal-detail">
+          <span class="material-icons-outlined">family_restroom</span>
+          Family calendar
+        </div>
+      </div>
+    </div>
+
+    <!-- Microsoft To Do -->
+    <div class="service-card">
+      <div class="service-header todo">
+        <span class="material-icons-outlined">checklist</span>
+        Microsoft To Do
+      </div>
+      <div class="service-body">
+        <div class="service-detail todo-detail">
+          <span class="material-icons-outlined">hub</span>
+          n8n (self-hosted)
+          <span class="protocol-badge http">http</span>
+        </div>
+        <div class="service-detail todo-detail">
+          <span class="material-icons-outlined">vpn_key</span>
+          OAuth via n8n
+        </div>
+        <div class="service-detail todo-detail">
+          <span class="material-icons-outlined">edit_note</span>
+          Claude list (read-write)
+        </div>
+      </div>
+    </div>
+
+    <!-- Git/GitHub -->
+    <div class="service-card">
+      <div class="service-header git">
+        <span class="material-icons-outlined">cloud_sync</span>
+        Git / GitHub
+      </div>
+      <div class="service-body">
+        <div class="service-detail git-detail">
+          <span class="material-icons-outlined">terminal</span>
+          Git CLI
+          <span class="protocol-badge cli">cli</span>
+        </div>
+        <div class="service-detail git-detail">
+          <span class="material-icons-outlined">history</span>
+          Version control
+        </div>
+        <div class="service-detail git-detail">
+          <span class="material-icons-outlined">description</span>
+          Meal plan history
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Down to file store -->
+  <div class="stores-connector">
+    <div class="vert"></div>
+  </div>
+
+  <div class="store-card">
+    <span class="material-icons-outlined">folder</span>
+    <div>
+      <div class="store-label">Local Repository</div>
+      <div class="store-sub">CLAUDE.md &bull; dietary-guidelines.md &bull; meal_plans/ &bull; recipes/</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
